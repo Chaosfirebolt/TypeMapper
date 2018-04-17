@@ -13,9 +13,11 @@ import java.util.Objects;
 class MappingImpl<S, D> implements Mapping<S, D> {
 
     private final List<Action<S, D>> actions;
+    private final Mapping<? super S, ? super D> parent;
 
-    MappingImpl() {
+    MappingImpl(Mapping<? super S, ? super D> parent) {
         this.actions = new LinkedList<>();
+        this.parent = parent;
     }
 
     @Override
@@ -31,5 +33,10 @@ class MappingImpl<S, D> implements Mapping<S, D> {
     @Override
     public void register(Action<S, D> action) {
         this.actions.add(Objects.requireNonNull(action));
+    }
+
+    @Override
+    public Mapping<? super S, ? super D> getParent() {
+        return this.parent;
     }
 }

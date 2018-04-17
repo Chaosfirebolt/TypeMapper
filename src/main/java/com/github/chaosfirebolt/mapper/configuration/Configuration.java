@@ -10,4 +10,6 @@ public interface Configuration {
     }
     <S, D> Mapping<S, D> mapping(Direction<S, D> direction);
     <S, D> Mapping<S, D> mapping(Class<S> sourceClass, Class<D> destinationClass);
+    <S, D> Mapping<S, D> mapping(Direction<S, D> direction, Mapping<? super S, ? super D> parentMapping);
+    <S, D> Mapping<S, D> mapping(Class<S> sourceClass, Class<D> destinationClass, Mapping<? super S, ? super D> parentMapping);
 }

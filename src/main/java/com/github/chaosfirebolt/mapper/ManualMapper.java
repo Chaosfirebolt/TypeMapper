@@ -2,6 +2,7 @@ package com.github.chaosfirebolt.mapper;
 
 import com.github.chaosfirebolt.mapper.configuration.Configuration;
 import com.github.chaosfirebolt.mapper.configuration.Direction;
+import com.github.chaosfirebolt.mapper.configuration.Mapping;
 import com.github.chaosfirebolt.mapper.configuration.action.Action;
 
 import java.util.List;
@@ -22,11 +23,19 @@ class ManualMapper extends AbstractMapper {
     @Override
     public <S, D> D map(S sourceObject, D destinationObject) {
         Direction<S, D> direction = new Direction<>(genericClass(sourceObject), genericClass(destinationObject));
-        List<Action<S, D>> actions = this.configuration.mapping(direction).getActions();
-        for (Action<S, D> action : actions) {
-            action.perform(sourceObject, destinationObject);
-        }
+        this.performAll(sourceObject, destinationObject, this.configuration.mapping(direction));
         return destinationObject;
+    }
+
+    private <S, D> void performAll(S source, D destination, Mapping<S, D> mapping) {
+        if (mapping == null) {
+            return;
+        }
+        this.performAll(source, destination, mapping.getParent());
+        List<Action<S, D>> actions = mapping.getActions();
+        for (Action<S, D> action : actions) {
+            action.perform(source, destination);
+        }
     }
 
     @Override

@@ -13,6 +13,14 @@ public class Direction<S, D> {
         this.destinationClass = destinationClass;
     }
 
+    Class<S> getSourceClass() {
+        return this.sourceClass;
+    }
+
+    Class<D> getDestinationClass() {
+        return this.destinationClass;
+    }
+
     @Override
     public int hashCode() {
         return 17 * this.sourceClass.hashCode() + 31 * this.destinationClass.hashCode();

@@ -12,4 +12,5 @@ public interface Mapping<S, D> {
     Composer<S, D, ?, ?> composer();
     List<Action<S, D>> getActions();
     void register(Action<S, D> action);
+    Mapping<? super S, ? super D> getParent();
 }
