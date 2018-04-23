@@ -12,6 +12,9 @@ import java.util.Map;
  */
 public class ObjectFactoryImpl implements ObjectFactory {
 
+    /**
+     * Cached constructors of mapped classes.
+     */
     private final Map<Class<?>, Constructor<?>> constructorMap;
 
     public ObjectFactoryImpl() {

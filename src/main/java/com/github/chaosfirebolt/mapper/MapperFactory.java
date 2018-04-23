@@ -9,15 +9,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Factory for {@link TypeMapper} instances.
+ *
  * Created by ChaosFire on 16-Apr-18
  */
 @SuppressWarnings("WeakerAccess")
 public class MapperFactory {
 
+    /**
+     * Package where TypeMapper implementations are located.
+     */
     private static final String PACKAGE = "com.github.chaosfirebolt.mapper.";
 
+    /**
+     * Cached instances of each mapper implementation.
+     */
     private static Map<Mapper, TypeMapper> instances = new HashMap<>();
 
+    /**
+     * Returns instance of {@code TypeMapper} associated with provided {@link Mapper}
+     * @param mapper Desired TypeMapper implementation.
+     * @return Instance of TypeMapper.
+     */
     @SuppressWarnings("unchecked")
     public static TypeMapper getMapper(Mapper mapper) {
         TypeMapper typeMapper = instances.get(mapper);

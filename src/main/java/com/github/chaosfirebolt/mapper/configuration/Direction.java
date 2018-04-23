@@ -1,11 +1,22 @@
 package com.github.chaosfirebolt.mapper.configuration;
 
 /**
+ * Convenience class representing direction of object to object transformation.
+ *
+ * @param <S> Type of source objects.
+ * @param <D> Type of destination objects.
+ *
  * Created by ChaosFire on 11-Apr-18
  */
 public class Direction<S, D> {
 
+    /**
+     * Source class.
+     */
     private final Class<S> sourceClass;
+    /**
+     * Destination class.
+     */
     private final Class<D> destinationClass;
 
     public Direction(Class<S> sourceClass, Class<D> destinationClass) {

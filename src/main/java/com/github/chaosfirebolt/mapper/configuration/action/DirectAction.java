@@ -4,6 +4,8 @@ import com.github.chaosfirebolt.mapper.configuration.function.Consumer;
 import com.github.chaosfirebolt.mapper.configuration.function.Supplier;
 
 /**
+ * Implementation of Action interface, which directly consumes result from supplier function.
+ *
  * Created by ChaosFire on 11-Apr-18
  */
 class DirectAction<S, D, F> implements Action<S, D> {

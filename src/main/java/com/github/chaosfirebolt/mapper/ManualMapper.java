@@ -8,6 +8,8 @@ import com.github.chaosfirebolt.mapper.configuration.action.Action;
 import java.util.List;
 
 /**
+ * Implementation of {@link TypeMapper}, requiring manual configuration.
+ *
  * Created by ChaosFire on 13-Apr-18
  */
 @SuppressWarnings("unused")

@@ -6,6 +6,8 @@ import com.github.chaosfirebolt.mapper.configuration.function.Supplier;
 import java.util.function.Function;
 
 /**
+ * Implementation of Action interface, which transforms result form supplier before consuming it.
+ *
  * Created by ChaosFire on 11-Apr-18
  */
 class TransformingAction<S, D, From, To> implements Action<S, D> {

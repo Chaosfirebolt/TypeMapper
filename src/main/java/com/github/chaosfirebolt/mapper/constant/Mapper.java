@@ -1,6 +1,8 @@
 package com.github.chaosfirebolt.mapper.constant;
 
 /**
+ * Enumeration for implementations of {@link com.github.chaosfirebolt.mapper.TypeMapper}.
+ *
  * Created by ChaosFire on 16-Apr-18
  */
 public enum Mapper {
