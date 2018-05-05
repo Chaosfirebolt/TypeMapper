@@ -1,6 +1,7 @@
 package com.github.chaosfirebolt.mapper.configuration;
 
 import com.github.chaosfirebolt.mapper.configuration.action.Action;
+import com.github.chaosfirebolt.mapper.constant.Mapper;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -14,15 +15,17 @@ class MappingImpl<S, D> implements Mapping<S, D> {
 
     private final List<Action<S, D>> actions;
     private final Mapping<? super S, ? super D> parent;
+    private final Mapper mapper;
 
-    MappingImpl(Mapping<? super S, ? super D> parent) {
+    MappingImpl(Mapping<? super S, ? super D> parent, Mapper mapper) {
         this.actions = new LinkedList<>();
         this.parent = parent;
+        this.mapper = mapper;
     }
 
     @Override
     public Composer<S, D, ?, ?> composer() {
-        return new ComposerImpl<>(this);
+        return new ComposerImpl<>(this, this.mapper);
     }
 
     @Override

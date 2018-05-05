@@ -1,5 +1,7 @@
 package com.github.chaosfirebolt.mapper.configuration;
 
+import com.github.chaosfirebolt.mapper.constant.Mapper;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,21 +12,14 @@ import java.util.Set;
  */
 class ConfigurationImpl implements Configuration {
 
-    private static Configuration instance;
-
     private final Map<Direction<?, ?>, Mapping<?, ?>> conversionMap;
     private final Map<Class<?>, Set<Class<?>>> directionMap;
+    private final Mapper mapper;
 
-    private ConfigurationImpl() {
+    ConfigurationImpl(Mapper mapper) {
         this.conversionMap = new HashMap<>();
         this.directionMap = new HashMap<>();
-    }
-
-    static Configuration getInstance() {
-        if (instance == null) {
-            instance = new ConfigurationImpl();
-        }
-        return instance;
+        this.mapper = mapper;
     }
 
     @Override
@@ -45,7 +40,7 @@ class ConfigurationImpl implements Configuration {
             if (parentMapping == null) {
                 parentMapping = this.resolveParent(direction);
             }
-            mapping = new MappingImpl<>(parentMapping);
+            mapping = new MappingImpl<>(parentMapping, this.mapper);
             this.conversionMap.put(direction, mapping);
             Set<Class<?>> destinations = this.directionMap.computeIfAbsent(direction.getSourceClass(), key -> new HashSet<>());
             destinations.add(direction.getDestinationClass());

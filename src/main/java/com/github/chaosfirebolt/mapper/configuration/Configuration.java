@@ -8,15 +8,6 @@ package com.github.chaosfirebolt.mapper.configuration;
 public interface Configuration {
 
     /**
-     * Configuration for {@link com.github.chaosfirebolt.mapper.TypeMapper}
-     *
-     * @return Singleton implementation of the interface.
-     */
-    static Configuration getConfiguration() {
-        return ConfigurationImpl.getInstance();
-    }
-
-    /**
      * Creates and returns new instance of {@link Mapping} or returns existing instance for the specified direction. If there is no such instance attempts to resolve parent mapping
      * for super classes of types <S> and <D>
      *

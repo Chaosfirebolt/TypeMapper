@@ -1,9 +1,11 @@
 package com.github.chaosfirebolt.mapper;
 
 import com.github.chaosfirebolt.mapper.configuration.Configuration;
+import com.github.chaosfirebolt.mapper.configuration.ConfigurationFactory;
 import com.github.chaosfirebolt.mapper.configuration.Direction;
 import com.github.chaosfirebolt.mapper.configuration.Mapping;
 import com.github.chaosfirebolt.mapper.configuration.action.Action;
+import com.github.chaosfirebolt.mapper.constant.Mapper;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ class ManualMapper extends AbstractMapper {
 
     ManualMapper() {
         super();
-        this.configuration = Configuration.getConfiguration();
+        this.configuration = ConfigurationFactory.getConfiguration(Mapper.MANUAL);
     }
 
     @Override
