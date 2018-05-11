@@ -8,6 +8,11 @@ public class Dto {
     private String fullName;
     private String age;
 
+    @Override
+    public String toString() {
+        return String.format("%s; %s", this.fullName, this.age);
+    }
+
     public String getFullName() {
         return this.fullName;
     }
