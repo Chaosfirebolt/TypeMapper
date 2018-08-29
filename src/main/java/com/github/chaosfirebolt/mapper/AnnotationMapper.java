@@ -78,6 +78,9 @@ public class AnnotationMapper extends AbstractMapper {
     }
 
     private Object newElement(Object object, Class<?> destType, boolean mapped) {
+        if (object == null) {
+            return null;
+        }
         return mapped ? this.map(object, destType) : object;
     }
 }
