@@ -3,6 +3,9 @@ package com.github.chaosfirebolt.mapper;
 import com.github.chaosfirebolt.mapper.configuration.factory.ObjectFactory;
 import com.github.chaosfirebolt.mapper.configuration.factory.ObjectFactoryImpl;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Super class for all implementations of TypeMapper.
  *
@@ -11,13 +14,29 @@ import com.github.chaosfirebolt.mapper.configuration.factory.ObjectFactoryImpl;
 abstract class AbstractMapper implements TypeMapper {
 
     private final ObjectFactory objectFactory;
+    private final Map<Integer, Object> destinationRefs;
 
     AbstractMapper() {
         this.objectFactory = new ObjectFactoryImpl();
+        this.destinationRefs = new ConcurrentHashMap<>();
     }
 
-    ObjectFactory getObjectFactory() {
-        return this.objectFactory;
+    <O> O createObject(Class<O> clazz) {
+        return this.objectFactory.create(clazz);
+    }
+
+    void registerRef(int sourceHash, Object destObj) {
+        if (!this.destinationRefs.containsKey(sourceHash)) {
+            this.destinationRefs.put(sourceHash, destObj);
+        }
+    }
+
+    Object getSeenRef(int sourceHash) {
+        return this.destinationRefs.get(sourceHash);
+    }
+
+    void clearRefs() {
+        this.destinationRefs.clear();
     }
 
     /**

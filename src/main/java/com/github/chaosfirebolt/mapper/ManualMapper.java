@@ -44,7 +44,7 @@ class ManualMapper extends AbstractMapper {
 
     @Override
     public <S, D> D map(S sourceObject, Class<D> destinationClass) {
-        D destinationObject = super.getObjectFactory().create(destinationClass);
+        D destinationObject = super.createObject(destinationClass);
         return this.map(sourceObject, destinationObject);
     }
 }

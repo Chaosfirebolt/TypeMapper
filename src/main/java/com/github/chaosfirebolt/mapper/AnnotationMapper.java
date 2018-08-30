@@ -23,14 +23,18 @@ public class AnnotationMapper extends AbstractMapper {
 
     @Override
     public <S, D> D map(S sourceObject, D destinationObject) {
+        super.registerRef(System.identityHashCode(sourceObject), destinationObject);
         this.convert(sourceObject, genericClass(sourceObject), destinationObject, genericClass(destinationObject));
+        super.clearRefs();
         return destinationObject;
     }
 
     @Override
     public <S, D> D map(S sourceObject, Class<D> destinationClass) {
-        D destinationObject = super.getObjectFactory().create(destinationClass);
+        D destinationObject = super.createObject(destinationClass);
+        super.registerRef(System.identityHashCode(sourceObject), destinationObject);
         this.convert(sourceObject, genericClass(sourceObject), destinationObject, destinationClass);
+        super.clearRefs();
         return destinationObject;
     }
 
@@ -80,6 +84,10 @@ public class AnnotationMapper extends AbstractMapper {
     private Object newElement(Object object, Class<?> destType, boolean mapped) {
         if (object == null) {
             return null;
+        }
+        Object seenObj = super.getSeenRef(System.identityHashCode(object));
+        if (seenObj != null) {
+            return seenObj;
         }
         return mapped ? this.map(object, destType) : object;
     }

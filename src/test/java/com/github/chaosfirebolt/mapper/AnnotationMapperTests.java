@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by ChaosFire on 16-May-18
@@ -88,7 +89,10 @@ public class AnnotationMapperTests {
         Adult jack = new Adult("Jack", 29, "salesman", george);
 
         AdultView actual = this.typeMapper.map(jack, AdultView.class);
+        assertNotNull(actual.getFriend());
+        assertNull(actual.getFriend().getFriend());
         assertEqualData(actual, jack);
+        assertEqualData(actual.getFriend(), george);
     }
 
     @Test
@@ -98,7 +102,10 @@ public class AnnotationMapperTests {
         george.setFriend(jack);
 
         AdultView actual = this.typeMapper.map(jack, AdultView.class);
+        assertNotNull(actual.getFriend());
+        assertNotNull(actual.getFriend().getFriend());
         assertEqualData(actual, jack);
+        assertEqualData(actual.getFriend(), george);
     }
 
     private static void assertEqualData(AdultView actual, Adult source) {
@@ -106,9 +113,5 @@ public class AnnotationMapperTests {
         assertEquals(source.getName(), actual.getName());
         assertNotNull(actual.getWork());
         assertEquals(source.getJob(), actual.getWork());
-        if (actual.getFriend() == null && source.getFriend() == null) {
-            return;
-        }
-        assertEqualData(actual.getFriend(), source.getFriend());
     }
 }
