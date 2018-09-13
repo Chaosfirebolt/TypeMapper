@@ -3,17 +3,13 @@ package com.github.chaosfirebolt.mapper;
 import com.github.chaosfirebolt.mapper.configuration.ConfigurationFactory;
 import com.github.chaosfirebolt.mapper.configuration.Direction;
 import com.github.chaosfirebolt.mapper.constant.Mapper;
-import com.github.chaosfirebolt.mapper.dummy.Dto;
-import com.github.chaosfirebolt.mapper.dummy.Entity;
-import com.github.chaosfirebolt.mapper.dummy.ExtDto;
-import com.github.chaosfirebolt.mapper.dummy.ExtEntity;
+import com.github.chaosfirebolt.mapper.dummy.*;
 import com.github.chaosfirebolt.mapper.testUtils.TestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 /**
  * Created by ChaosFire on 11.4.2018 г.
@@ -37,6 +33,12 @@ public class ManualTypeMapperTests {
                 .transform(Integer.class, String.class).supplier(Entity::getAge).consumer(Dto::setAge).function(Object::toString)
                 .finish().mapping(ExtEntity.class, ExtDto.class, ConfigurationFactory.getConfiguration(this.mapper).mapping(parentDirection)).composer()
                 .transform(String.class, String.class).supplier(ExtEntity::getAddress).consumer(ExtDto::setAddress)
+                .finish().mapping(Person.class, PersonView.class).composer()
+                .transform(String.class, String.class).supplier(Person::getName).consumer(PersonView::setName)
+                .compose()
+                .transform(String.class, String.class).supplier(Person::getJob).consumer(PersonView::setWork)
+                .finish().mapping(Adult.class, AdultView.class).composer()
+                .transform(Adult.class, AdultView.class).supplier(Adult::getFriend).consumer(AdultView::setFriend).function(adult -> this.typeMapper.map(adult, AdultView.class))
                 .finish();
     }
 
@@ -110,6 +112,84 @@ public class ManualTypeMapperTests {
         ExtDto actual = this.typeMapper.map(entity, expected);
 
         assertSame(expected, actual);
+    }
+
+    @Test
+    public void circularReference_OneSide_ShouldMapCorrect() {
+        Adult george = new Adult("George", 31, "businessman");
+        Adult jack = new Adult("Jack", 29, "salesman", george);
+
+        AdultView expected = convertBasic(jack);
+        expected.setFriend(convertBasic(george));
+        AdultView actual = this.typeMapper.map(jack, AdultView.class);
+
+        basicAssert(expected, actual);
+        assertNotNull(actual.getFriend());
+        basicAssert(expected.getFriend(), actual.getFriend());
+        assertNull(actual.getFriend().getFriend());
+    }
+
+    @Test
+    public void circularReference_BothSides_ShouldMapCorrect() {
+        Adult george = new Adult("George", 31, "businessman");
+        Adult jack = new Adult("Jack", 29, "salesman", george);
+        george.setFriend(jack);
+
+        AdultView expected = convertBasic(jack);
+        AdultView georgeView = convertBasic(george);
+        expected.setFriend(georgeView);
+        georgeView.setFriend(expected);
+        AdultView actual = this.typeMapper.map(jack, AdultView.class);
+
+        basicAssert(expected, actual);
+        assertNotNull(actual.getFriend());
+        basicAssert(expected.getFriend(), actual.getFriend());
+        assertNotNull(actual.getFriend().getFriend());
+        assertSame(actual, actual.getFriend().getFriend());
+        assertSame(actual.getFriend(), actual.getFriend().getFriend().getFriend());
+    }
+
+    @Test(expected = StackOverflowError.class)
+    public void circularReference_BothSides_RecursionShouldThrowStackOverflow() {
+        Adult george = new Adult("George", 31, "businessman");
+        Adult jack = new Adult("Jack", 29, "salesman", george);
+        george.setFriend(jack);
+
+        AdultView expected = convertBasic(jack);
+        AdultView georgeView = convertBasic(george);
+        expected.setFriend(georgeView);
+        georgeView.setFriend(expected);
+        AdultView actual;
+        try {
+            actual = this.typeMapper.map(jack, AdultView.class);
+        } catch (StackOverflowError exc) {
+            throw new RuntimeException(exc);
+        }
+        recursiveGetFriend(actual);
+    }
+
+    private static void recursiveGetFriend(AdultView adultView) {
+        if (adultView == null) {
+            return;
+        }
+        recursiveGetFriend(adultView.getFriend());
+    }
+
+    private static void basicAssert(AdultView expected, AdultView actual) {
+        assertNotNull(actual.getName());
+        assertEquals(expected.getName(), actual.getName());
+        assertNotNull(actual.getWork());
+        assertEquals(expected.getWork(), actual.getWork());
+    }
+
+    private static AdultView convertBasic(Adult adult) {
+        if (adult == null) {
+            return null;
+        }
+        AdultView adultView = new AdultView();
+        adultView.setName(adult.getName());
+        adultView.setWork(adult.getJob());
+        return adultView;
     }
 
     private Entity getEntity() {

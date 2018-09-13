@@ -96,7 +96,7 @@ public class AnnotationMapperTests {
     }
 
     @Test
-    public void test_circular_Both_sides() {
+    public void test_circular_both_sides() {
         Adult george = new Adult("George", 31, "businessman");
         Adult jack = new Adult("Jack", 29, "salesman", george);
         george.setFriend(jack);
