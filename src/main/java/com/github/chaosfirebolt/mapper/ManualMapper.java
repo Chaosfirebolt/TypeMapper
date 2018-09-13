@@ -26,8 +26,27 @@ class ManualMapper extends AbstractMapper {
 
     @Override
     public <S, D> D map(S sourceObject, D destinationObject) {
+        Object seen = super.getSeenRef(System.identityHashCode(sourceObject));
+        if (seen != null) {
+            return genericClass(destinationObject).cast(seen);
+        }
+        super.registerRef(System.identityHashCode(sourceObject), destinationObject);
         Direction<S, D> direction = new Direction<>(genericClass(sourceObject), genericClass(destinationObject));
         this.performAll(sourceObject, destinationObject, this.configuration.mapping(direction));
+        super.clearRefs();
+        return destinationObject;
+    }
+
+    @Override
+    public <S, D> D map(S sourceObject, Class<D> destinationClass) {
+        Object seen = super.getSeenRef(System.identityHashCode(sourceObject));
+        if (seen != null) {
+            return destinationClass.cast(seen);
+        }
+        D destinationObject = super.createObject(destinationClass);
+        super.registerRef(System.identityHashCode(sourceObject), destinationObject);
+        this.performAll(sourceObject, destinationObject, this.configuration.mapping(genericClass(sourceObject), destinationClass));
+        super.clearRefs();
         return destinationObject;
     }
 
@@ -40,11 +59,5 @@ class ManualMapper extends AbstractMapper {
         for (Action<S, D> action : actions) {
             action.perform(source, destination);
         }
-    }
-
-    @Override
-    public <S, D> D map(S sourceObject, Class<D> destinationClass) {
-        D destinationObject = super.createObject(destinationClass);
-        return this.map(sourceObject, destinationObject);
     }
 }

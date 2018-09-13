@@ -38,7 +38,8 @@ public class ManualTypeMapperTests {
                 .compose()
                 .transform(String.class, String.class).supplier(Person::getJob).consumer(PersonView::setWork)
                 .finish().mapping(Adult.class, AdultView.class).composer()
-                .transform(Adult.class, AdultView.class).supplier(Adult::getFriend).consumer(AdultView::setFriend).function(adult -> this.typeMapper.map(adult, AdultView.class))
+                .transform(Adult.class, AdultView.class).supplier(Adult::getFriend).consumer(AdultView::setFriend)
+                    .function(adult -> adult == null ? null : this.typeMapper.map(adult, AdultView.class))
                 .finish();
     }
 
