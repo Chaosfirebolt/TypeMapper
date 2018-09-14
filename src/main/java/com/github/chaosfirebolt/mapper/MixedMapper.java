@@ -2,24 +2,21 @@ package com.github.chaosfirebolt.mapper;
 
 import com.github.chaosfirebolt.mapper.configuration.Configuration;
 import com.github.chaosfirebolt.mapper.configuration.ConfigurationFactory;
-import com.github.chaosfirebolt.mapper.configuration.Direction;
 import com.github.chaosfirebolt.mapper.constant.Mapper;
 
 import static com.github.chaosfirebolt.mapper.MapperUtil.performActions;
 
 /**
- * Implementation of {@link TypeMapper}, requiring manual configuration.
- *
- * Created by ChaosFire on 13-Apr-18
+ * Created by ChaosFire on 13-Sep-18
  */
 @SuppressWarnings("unused")
-class ManualMapper extends AbstractMapper {
+class MixedMapper extends AbstractMapper {
 
     private final Configuration configuration;
 
-    ManualMapper() {
+    MixedMapper() {
         super();
-        this.configuration = ConfigurationFactory.getConfiguration(Mapper.MANUAL);
+        this.configuration = ConfigurationFactory.getConfiguration(Mapper.MIXED);
     }
 
     @Override
@@ -29,8 +26,10 @@ class ManualMapper extends AbstractMapper {
             return genericClass(destinationObject).cast(seen);
         }
         super.registerRef(System.identityHashCode(sourceObject), destinationObject);
-        Direction<S, D> direction = new Direction<>(genericClass(sourceObject), genericClass(destinationObject));
-        performActions(sourceObject, destinationObject, this.configuration.mapping(direction));
+        Class<S> sourceClass = genericClass(sourceObject);
+        Class<D> destinationClass = genericClass(destinationObject);
+        performActions(sourceObject, destinationObject, this.configuration.mapping(sourceClass, destinationClass));
+        super.convert(sourceObject, sourceClass, destinationObject, destinationClass, true);
         super.clearRefs();
         return destinationObject;
     }
@@ -43,7 +42,9 @@ class ManualMapper extends AbstractMapper {
         }
         D destinationObject = super.createObject(destinationClass);
         super.registerRef(System.identityHashCode(sourceObject), destinationObject);
-        performActions(sourceObject, destinationObject, this.configuration.mapping(genericClass(sourceObject), destinationClass));
+        Class<S> sourceClass = genericClass(sourceObject);
+        performActions(sourceObject, destinationObject, this.configuration.mapping(sourceClass, destinationClass));
+        super.convert(sourceObject, sourceClass, destinationObject, destinationClass, true);
         super.clearRefs();
         return destinationObject;
     }
