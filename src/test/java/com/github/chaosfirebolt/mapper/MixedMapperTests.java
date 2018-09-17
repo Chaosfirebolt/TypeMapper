@@ -8,6 +8,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /**
  * Created by ChaosFire on 14-Sep-18
  */
@@ -51,6 +54,53 @@ public class MixedMapperTests {
         harry.setColleague(henry);
 
         EmployeeView actual = this.typeMapper.map(henry, EmployeeView.class);
+        assertEqualData(actual, henry, 0);
+        assertNotNull(actual.getName());
+        assertNotNull(actual.getWork());
+        assertNotNull(actual.getSalary());
+        assertNotNull(actual.getPosition());
+        assertNotNull(actual.getCompany().getName());
+        assertNotNull(actual.getCompany().getEmployeeCount());
+        assertNotNull(actual.getAddressView().getCity());
+        assertNotNull(actual.getAddressView().getNumber());
+        assertNotNull(actual.getAddressView().getStreet());
+        assertNotNull(actual.getColleague());
+    }
+
+    @Test
+    public void someValuesNull_ShouldMapCorrectly() {
+        Employee henry = createEmployee("United", 10, "Sofia", "Bull", 20, "Henry", 25, "salaryman", "manager", 999.99);
+        Employee harry = createEmployee("Disease", 15, "Pleven", "Grip", 35, "Harry", 28, "collector", null, 856.20);
+        henry.setColleague(harry);
+        harry.setColleague(henry);
+        harry.setAddress(null);
+
+        EmployeeView actual = this.typeMapper.map(harry, EmployeeView.class);
+        assertEqualData(actual, harry, 0);
+    }
+
+    private static void assertEqualData(EmployeeView view, Employee employee, int depth) {
+        if (depth > 1) {
+            return;
+        }
+        assertEquals(view.getName(), employee.getName());
+        assertEquals(view.getWork(), employee.getJob());
+        assertEquals(view.getSalary(), employee.getSalary());
+        assertEquals(view.getPosition(), employee.getPosition());
+        if (view.getCompany() != null && employee.getCompany() != null) {
+            assertEquals(view.getCompany().getName(), employee.getCompany().getName());
+            assertEquals(view.getCompany().getEmployeeCount(), employee.getCompany().getEmployeeCount());
+        } else if ((view.getCompany() != null && employee.getCompany() == null) || (view.getCompany() == null && employee.getCompany() != null)) {
+            throw new AssertionError();
+        }
+        if (view.getAddressView() != null && employee.getAddress() != null) {
+            assertEquals(view.getAddressView().getCity(), employee.getAddress().getCity());
+            assertEquals(view.getAddressView().getNumber(), employee.getAddress().getNumber());
+            assertEquals(view.getAddressView().getStreet(), employee.getAddress().getStreet());
+        } else if ((view.getAddressView() != null && employee.getAddress() == null) || (view.getAddressView() == null && employee.getAddress() != null)) {
+            throw new AssertionError();
+        }
+        assertEqualData(view.getColleague(), employee.getColleague(), depth + 1);
     }
 
     private static Employee createEmployee(String comName, Integer emplCount, String city, String street, Integer num, String empName, int age, String job, String pos, Double salary) {

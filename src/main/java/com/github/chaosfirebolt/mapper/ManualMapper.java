@@ -31,7 +31,7 @@ class ManualMapper extends AbstractMapper {
         super.registerRef(System.identityHashCode(sourceObject), destinationObject);
         Direction<S, D> direction = new Direction<>(genericClass(sourceObject), genericClass(destinationObject));
         performActions(sourceObject, destinationObject, this.configuration.mapping(direction));
-        super.clearRefs();
+        super.clearRef(System.identityHashCode(sourceObject));
         return destinationObject;
     }
 
@@ -44,7 +44,7 @@ class ManualMapper extends AbstractMapper {
         D destinationObject = super.createObject(destinationClass);
         super.registerRef(System.identityHashCode(sourceObject), destinationObject);
         performActions(sourceObject, destinationObject, this.configuration.mapping(genericClass(sourceObject), destinationClass));
-        super.clearRefs();
+        super.clearRef(System.identityHashCode(sourceObject));
         return destinationObject;
     }
 }

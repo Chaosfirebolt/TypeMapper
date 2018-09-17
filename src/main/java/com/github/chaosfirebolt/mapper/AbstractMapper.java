@@ -44,8 +44,8 @@ abstract class AbstractMapper implements TypeMapper {
         return this.destinationRefs.get(sourceHash);
     }
 
-    void clearRefs() {
-        this.destinationRefs.clear();
+    void clearRef(int sourceHash) {
+        this.destinationRefs.remove(sourceHash);
     }
 
     /**

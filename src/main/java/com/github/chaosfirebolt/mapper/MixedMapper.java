@@ -30,12 +30,15 @@ class MixedMapper extends AbstractMapper {
         Class<D> destinationClass = genericClass(destinationObject);
         performActions(sourceObject, destinationObject, this.configuration.mapping(sourceClass, destinationClass));
         super.convert(sourceObject, sourceClass, destinationObject, destinationClass, true);
-        super.clearRefs();
+        super.clearRef(System.identityHashCode(sourceObject));
         return destinationObject;
     }
 
     @Override
     public <S, D> D map(S sourceObject, Class<D> destinationClass) {
+        if (sourceObject == null) {
+            return null;
+        }
         Object seen = super.getSeenRef(System.identityHashCode(sourceObject));
         if (seen != null) {
             return destinationClass.cast(seen);
@@ -45,7 +48,7 @@ class MixedMapper extends AbstractMapper {
         Class<S> sourceClass = genericClass(sourceObject);
         performActions(sourceObject, destinationObject, this.configuration.mapping(sourceClass, destinationClass));
         super.convert(sourceObject, sourceClass, destinationObject, destinationClass, true);
-        super.clearRefs();
+        super.clearRef(System.identityHashCode(sourceObject));
         return destinationObject;
     }
 }

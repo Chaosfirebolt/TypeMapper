@@ -14,7 +14,7 @@ public class AnnotationMapper extends AbstractMapper {
     public <S, D> D map(S sourceObject, D destinationObject) {
         super.registerRef(System.identityHashCode(sourceObject), destinationObject);
         super.convert(sourceObject, genericClass(sourceObject), destinationObject, genericClass(destinationObject), false);
-        super.clearRefs();
+        super.clearRef(System.identityHashCode(sourceObject));
         return destinationObject;
     }
 
@@ -23,7 +23,7 @@ public class AnnotationMapper extends AbstractMapper {
         D destinationObject = super.createObject(destinationClass);
         super.registerRef(System.identityHashCode(sourceObject), destinationObject);
         super.convert(sourceObject, genericClass(sourceObject), destinationObject, destinationClass, false);
-        super.clearRefs();
+        super.clearRef(System.identityHashCode(sourceObject));
         return destinationObject;
     }
 }
