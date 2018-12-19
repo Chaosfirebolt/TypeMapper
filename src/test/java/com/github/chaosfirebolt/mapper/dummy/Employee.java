@@ -15,6 +15,7 @@ public class Employee extends Person {
     private String position;
     @Access(setter = false)
     private Double salary;
+    @Access(setter = false)
     private Address address;
     @Access(setter = false)
     private Employee colleague;

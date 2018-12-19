@@ -15,6 +15,7 @@ public class EmployeeView extends PersonView {
     private String position;
     @Access(getter = false)
     private Double salary;
+    @Access(getter = false, from = "address")
     private AddressView addressView;
     @Access(getter = false)
     private EmployeeView colleague;
