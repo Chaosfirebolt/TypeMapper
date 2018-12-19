@@ -46,8 +46,8 @@ class MixedMapper extends AbstractMapper {
         D destinationObject = super.createObject(destinationClass);
         super.registerRef(System.identityHashCode(sourceObject), destinationObject);
         Class<S> sourceClass = genericClass(sourceObject);
+        super.convert(sourceObject, sourceClass, destinationObject, destinationClass, false);
         performActions(sourceObject, destinationObject, this.configuration.mapping(sourceClass, destinationClass));
-        super.convert(sourceObject, sourceClass, destinationObject, destinationClass, true);
         super.clearRef(System.identityHashCode(sourceObject));
         return destinationObject;
     }

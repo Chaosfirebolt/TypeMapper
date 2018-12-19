@@ -11,6 +11,7 @@ public class CompanyView {
 
     @Access(getter = false, setterName = "setName", setterParams = String.class)
     private String name;
+    @Access(getter = false)
     private Integer employeeCount;
 
     public CompanyView() {

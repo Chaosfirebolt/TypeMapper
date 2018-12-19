@@ -7,6 +7,8 @@ import com.github.chaosfirebolt.mapper.testUtils.TestUtils;
 import org.junit.After;
 import org.junit.Before;
 
+import java.util.Objects;
+
 /**
  * Created by ChaosFire on 17-Sep-18
  */
@@ -31,6 +33,11 @@ public class MixedTypeMapperTests extends AbstractTypeMapperTests {
                     .function(address -> super.getTypeMapper().map(address, AddressView.class))
                 .compose().transform(Employee.class, EmployeeView.class).supplier(Employee::getColleague).consumer(EmployeeView::setColleague)
                     .function(colleague -> super.getTypeMapper().map(colleague, EmployeeView.class))
+                .finish().mapping(Entity.class, Dto.class)
+                .composer().transform(String.class, String.class).supplier(en -> en.getFirstName() + " " + en.getLastName()).consumer(Dto::setFullName)
+                .compose().transform(Integer.class, String.class).supplier(Entity::getAge).consumer(Dto::setAge).function(Objects::toString)
+                .finish().mapping(ExtEntity.class, ExtDto.class)
+                .composer().transform(String.class, String.class).supplier(ExtEntity::getAddress).consumer(ExtDto::setAddress)
                 .finish();
     }
 

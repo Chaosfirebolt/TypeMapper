@@ -11,9 +11,12 @@ public class Employee extends Person {
 
     @Access(setter = false)
     private Company company;
+    @Access(setter = false)
     private String position;
+    @Access(setter = false)
     private Double salary;
     private Address address;
+    @Access(setter = false)
     private Employee colleague;
 
     public Employee(String name, int age, String job, Company company, String position, Double salary, Address address) {

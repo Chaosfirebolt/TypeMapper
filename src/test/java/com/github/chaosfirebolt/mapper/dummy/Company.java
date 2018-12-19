@@ -11,6 +11,7 @@ public class Company {
 
     @Access(getterName = "getName", setter =  false)
     private String name;
+    @Access(setter = false)
     private Integer employeeCount;
 
     public Company() {

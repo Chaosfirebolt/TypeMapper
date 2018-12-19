@@ -11,9 +11,12 @@ public class EmployeeView extends PersonView {
 
     @Access(getter = false)
     private CompanyView company;
+    @Access(getter = false)
     private String position;
+    @Access(getter = false)
     private Double salary;
     private AddressView addressView;
+    @Access(getter = false)
     private EmployeeView colleague;
 
     public CompanyView getCompany() {

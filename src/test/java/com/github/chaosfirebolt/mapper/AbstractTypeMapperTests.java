@@ -250,7 +250,7 @@ abstract class AbstractTypeMapperTests {
             assertEquals(view.getAddressView().getNumber(), employee.getAddress().getNumber());
             assertEquals(view.getAddressView().getStreet(), employee.getAddress().getStreet());
         } else if ((view.getAddressView() != null && employee.getAddress() == null) || (view.getAddressView() == null && employee.getAddress() != null)) {
-            throw new AssertionError();
+            throw new AssertionError(view.getAddressView() + " -> " + employee.getAddress());
         }
         assertEqualData(view.getColleague(), employee.getColleague(), depth + 1);
     }
