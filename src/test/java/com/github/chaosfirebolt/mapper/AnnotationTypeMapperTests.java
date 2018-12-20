@@ -14,9 +14,30 @@ public class AnnotationTypeMapperTests extends AbstractTypeMapperTests {
     }
 
     @Test
-    @Ignore("Such mapping cannot be done with AnnotationTypeMapper.")
+    @Ignore("This kind of mapping result cannot be achieved with AnnotationTypeMapper.")
     @Override
     public void mapChildrenClasses_DestinationObject_ShouldReturnCorrectlyFilledObject() {
         super.mapChildrenClasses_DestinationObject_ShouldReturnCorrectlyFilledObject();
+    }
+
+    @Test
+    @Ignore("This kind of mapping result cannot be achieved with AnnotationTypeMapper.")
+    @Override
+    public void mapParentClasses_DestinationObject_ShouldReturnCorrectlyFilledObject() {
+        super.mapParentClasses_DestinationObject_ShouldReturnCorrectlyFilledObject();
+    }
+
+    @Test
+    @Ignore("This kind of mapping result cannot be achieved with AnnotationTypeMapper.")
+    @Override
+    public void mapParentClasses_DestinationClass_ShouldReturnCorrectlyFilledObject() {
+        super.mapParentClasses_DestinationClass_ShouldReturnCorrectlyFilledObject();
+    }
+
+    @Test
+    @Ignore("This kind of mapping result cannot be achieved with AnnotationTypeMapper.")
+    @Override
+    public void mapChildrenClasses_DestinationClass_ShouldReturnCorrectlyFilledObject() {
+        super.mapChildrenClasses_DestinationClass_ShouldReturnCorrectlyFilledObject();
     }
 }
